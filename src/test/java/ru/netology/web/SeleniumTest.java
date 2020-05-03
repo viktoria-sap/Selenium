@@ -45,14 +45,38 @@ class SeleniumTest {
 //    }
 
     @Test
-    void shouldTestV2() {
+    void shouldTestSuccess() {
         driver.get("http://localhost:9999");
         WebElement form = driver.findElement(By.cssSelector("form form_size_m form_theme_alfa-on-white"));
         form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Василий");
         form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79270000000");
         form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.cssSelector("[class=button button_view_extra button_size_m button_theme_alfa-on-white]")).click();
-        String text = driver.findElement(By.className("alert-success")).getText();
+        String text = driver.findElement(By.className("order-success")).getText();
         assertEquals("Ваша заявка успешно отправлена!", text.trim());
+    }
+
+    @Test
+    void shouldTestErrorName() {
+        driver.get("http://localhost:9999");
+        WebElement form = driver.findElement(By.cssSelector("form form_size_m form_theme_alfa-on-white"));
+        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Vasiliy");
+        form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79270000000");
+        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        form.findElement(By.cssSelector("[class=button button_view_extra button_size_m button_theme_alfa-on-white]")).click();
+        String text = driver.findElement(By.className("input_invalid")).getText();
+        assertEquals("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.", text.trim());
+    }
+
+    @Test
+    void shouldTestErrorPhone() {
+        driver.get("http://localhost:9999");
+        WebElement form = driver.findElement(By.cssSelector("form form_size_m form_theme_alfa-on-white"));
+        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Василий");
+        form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("9270000000");
+        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        form.findElement(By.cssSelector("[class=button button_view_extra button_size_m button_theme_alfa-on-white]")).click();
+        String text = driver.findElement(By.className("input_invalid")).getText();
+        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", text.trim());
     }
 }
